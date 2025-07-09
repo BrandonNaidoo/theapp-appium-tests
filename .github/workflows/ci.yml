@@ -14,17 +14,6 @@ jobs:
   appium-tests:
     runs-on: ubuntu-latest
 
-    services:
-      appium:
-        image: appium/appium
-        ports:
-          - 4723:4723
-        options: >-
-          --health-cmd "curl -f http://localhost:4723/status || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -34,21 +23,40 @@ jobs:
         with:
           dotnet-version: '9.0.x'
 
-      - name: Install Java (required for Android SDK)
+      - name: Set up Java (required for Android SDK)
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Install Android SDK
+      - name: Start Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 33
           target: default
-          arch: x86_64          
+          arch: x86_64
           force-avd-creation: true
-          script: echo "Emulator is ready"
+          script: echo "Emulator ready"
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Appium CLI
+        run: |
+          npm install -g appium
+          appium -v
+
+      - name: Start Appium Server (in background)
+        run: |
+          nohup appium > appium.log 2>&1 &
+
+      - name: Wait for Appium Server
+        run: |
+          for i in {1..10}; do
+            curl -f http://localhost:4723/status && break || sleep 5
+          done
 
       - name: Build project
         run: dotnet build AppiumTests/AppiumTests.csproj --configuration Release
