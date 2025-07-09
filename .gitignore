@@ -1,0 +1,21 @@
+# Build outputs
+bin/
+obj/
+TestResults/
+coverage/
+*.log
+
+# User-specific files
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+*.swp
+
+# OS-specific files
+.DS_Store
+
+# NuGet
+*.nupkg
+packages/
