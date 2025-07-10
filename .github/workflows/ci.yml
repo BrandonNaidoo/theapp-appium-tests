@@ -48,22 +48,22 @@ jobs:
           force-avd-creation: true
           disable-animations: true
           script: |
-            # Start Appium server first
+            # Start Appium server
             nohup appium > appium.log 2>&1 &
-          
-            # Build project while Appium is starting
-            dotnet build AppiumTests/AppiumTests.csproj --configuration Release
-          
+
             # Wait for Appium to be ready
             i=0
-            until curl -f http://localhost:4723/status; do
-              i=$((i+1))
+            while ! curl -f http://localhost:4723/status; do
+              i=$((i + 1))
               if [ "$i" -ge 10 ]; then
                 echo "Appium server did not start in time"
                 exit 1
               fi
               sleep 5
             done
-          
+
+            # Build the project
+            dotnet build AppiumTests/AppiumTests.csproj --configuration Release
+
             # Run tests
             dotnet test AppiumTests/AppiumTests.csproj --configuration Release --logger "trx"
