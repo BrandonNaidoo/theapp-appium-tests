@@ -22,6 +22,7 @@ namespace AppiumTests.Framework
 
             options.AddAdditionalAppiumOption("appPackage", "com.appiumpro.the_app");
             options.AddAdditionalAppiumOption("appActivity", ".MainActivity");
+            options.AddAdditionalAppiumOption("appWaitActivity", ".MainActivity");
 
             driver = new AndroidDriver(new Uri("http://127.0.0.1:4723/"), options);
         }

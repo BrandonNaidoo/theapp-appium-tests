@@ -27,6 +27,8 @@ namespace AppiumTests.Tests
             {
                 foreach (var item in HomePageMenuItems.All)
                 {
+                    Console.WriteLine($"Checking menu item: {item.Label}");
+
                     var container = driver.FindElement(MobileBy.AndroidUIAutomator(
                       $"new UiSelector().resourceId(\"{item.Label}\")"));
 
