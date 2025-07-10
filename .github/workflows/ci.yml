@@ -38,6 +38,12 @@ jobs:
         run: |
           npm install -g appium
           appium -v
+          appium driver list --installed
+          appium driver install uiautomator2
+          nohup appium --log-level warn --log-timestamp --local-timezone > appium.log 2>&1 &
+          sleep 10
+          curl http://localhost:4723/status || echo "Appium check failed"  
+          
 
       - name: Run tests on Android Emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -48,20 +54,6 @@ jobs:
           force-avd-creation: true
           disable-animations: true
           script: |
-            # Start Appium server
-            nohup appium > appium.log 2>&1 &
-
-            # Wait for Appium to be ready
-            i=0
-            while ! curl -f http://localhost:4723/status; do
-              i=$((i + 1))
-              if [ "$i" -ge 10 ]; then
-                echo "Appium server did not start in time"
-                exit 1
-              fi
-              sleep 5
-            done
-
             # Build the project
             dotnet build AppiumTests/AppiumTests.csproj --configuration Release
 
