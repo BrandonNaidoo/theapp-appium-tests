@@ -5,7 +5,7 @@ using OpenQA.Selenium.Appium.Android;
 
 namespace AppiumTests.Framework
 {
-    public class TestBase
+    public abstract class TestBase
     {
         protected AndroidDriver driver;
 
