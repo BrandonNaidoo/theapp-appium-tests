@@ -30,7 +30,8 @@ namespace AppiumTests.Tests
                     Console.WriteLine($"Checking menu item: {item.Label}");
 
                     var container = driver.FindElement(MobileBy.AndroidUIAutomator(
-                      $"new UiSelector().resourceId(\"{item.Label}\")"));
+                        $"new UiScrollable(new UiSelector().scrollable(true))" +
+                        $"new UiSelector().resourceId(\"{item.Label}\")"));
 
                     // Find label text inside container by text
                     var label = container.FindElement(MobileBy.AndroidUIAutomator(
