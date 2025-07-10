@@ -27,23 +27,13 @@ namespace AppiumTests.Tests
             {
                 foreach (var item in HomePageMenuItems.All)
                 {
-                    Console.WriteLine($"Checking menu item: {item.Label}");
+                    var container = homePage.GetMenuItem(item.Label);
 
-                    var container = driver.FindElement(MobileBy.AndroidUIAutomator(
-                        $"new UiScrollable(new UiSelector().scrollable(true))" +
-                        $"new UiSelector().resourceId(\"{item.Label}\")"));
+                    var labelText = homePage.GetLabel(container, item.Label);
+                    labelText.Should().Be(item.Label);
 
-                    // Find label text inside container by text
-                    var label = container.FindElement(MobileBy.AndroidUIAutomator(
-                      $"new UiSelector().text(\"{item.Label}\")"));
-
-                    label.Text.Should().Be(item.Label);
-
-                    // Find description text inside container by text
-                    var description = container.FindElement(MobileBy.AndroidUIAutomator(
-                      $"new UiSelector().text(\"{item.Description}\")"));
-
-                    description.Text.Should().Be(item.Description);
+                    var descriptionText = homePage.GetDescription(container, item.Description);
+                    descriptionText.Should().Be(item.Description);
                 }
             }
         }
