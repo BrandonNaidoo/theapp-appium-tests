@@ -71,3 +71,9 @@ jobs:
 
             # Run tests
             dotnet test AppiumTests/AppiumTests.csproj --configuration Release --logger "trx"
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: TestResults
+          path: '**/*.trx'            
