@@ -1,5 +1,6 @@
-﻿using OpenQA.Selenium.Appium.Android;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Appium;
+using OpenQA.Selenium.Appium.Android;
 
 namespace AppiumTests.Pages
 {
@@ -12,22 +13,26 @@ namespace AppiumTests.Pages
             this.driver = driver;
         }
 
-        public bool IsMenuItemPresent(string label) =>
-          ElementExists(By.XPath($"//android.widget.TextView[@text='{label}']"));
-
-        public bool IsMenuItemDescriptionPresent(string description) =>
-          ElementExists(By.XPath($"//android.widget.TextView[@text='{description}']"));
-
-        private bool ElementExists(By by)
+        public AppiumElement GetMenuItem(string resourceId)
         {
-            try
-            {
-                return driver.FindElement(by).Displayed;
-            }
-            catch (NoSuchElementException)
-            {
-                return false;
-            }
+            return driver.FindElement(MobileBy.AndroidUIAutomator(
+              $"new UiScrollable(new UiSelector().scrollable(true))" +
+              $".scrollIntoView(new UiSelector().resourceId(\"{resourceId}\"))"));
+        }
+        public string GetLabel(AppiumElement container, string expectedLabelText)
+        {
+            var label = container.FindElement(MobileBy.AndroidUIAutomator(
+                $"new UiScrollable(new UiSelector().scrollable(true))" +
+                $".scrollIntoView(new UiSelector().text(\"{expectedLabelText}\"))"));
+            return label.Text;
+        }
+
+        public string GetDescription(AppiumElement container, string expectedDescriptionText)
+        {
+            var description = container.FindElement(MobileBy.AndroidUIAutomator(
+                $"new UiScrollable(new UiSelector().scrollable(true))" +
+                $".scrollIntoView(new UiSelector().text(\"{expectedDescriptionText}\"))"));
+            return description.Text;
         }
 
         public void TapMenuItem(string labelText)
